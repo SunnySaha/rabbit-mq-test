@@ -1,0 +1,12 @@
+python road map:
+    - FastApi (DONE)
+    - Django (50%)
+    - Flask
+    - Django REST Framework
+    - Pandas
+    - Supervised Machine Learning
+    - Unsupervised Machine Learning
+
+python project::
+    - video streaming system
+    - CRM system

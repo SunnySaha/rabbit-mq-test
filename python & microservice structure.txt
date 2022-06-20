@@ -1,0 +1,21 @@
+#folder structure:
+    * microservices-service-name
+        - first-single-service-name   
+            -app name
+                -api folder/api files.py
+                -models/ models.py
+                -helper/ helper_function.py
+            main.py
+        .env
+        .requirement.txt
+        Dockerfile
+
+        - second-single-service-name
+            - app name
+                - api folder/ api's files.py
+                - models / models.py
+                -helper / helper_function.py
+            main.py
+        .env
+        .requirement.txt
+        Dockerfile

@@ -1,0 +1,89 @@
+RabbitMQ Notes:::
+--- a message on the Queue until any consumers are consume the message
+--- by default it process the message in round robin Architecture.
+
+
+
+1. Binding:
+    - Connection between Queue to Consumers and Exchange with Queue is call Binding.
+    - Queue never pass the message to consumers if there hasn't any Binding between them.
+
+
+2. Exchange:
+    - Exchange is responsible for what can be done with message, it can be send one or multiple Queue or cancel the message.
+    - Exchange is also responsible to distribute message to Queue.
+    - Types of Exchange
+        - Topic
+        - Fanout
+        - Direct
+    
+    Exchange Types Use Case:
+        Direct Exchange:
+        
+            - Direct Exchange used when message send to a specific one Queue. it is one to one relation between Exchange & a Queue. (it can be used in Response Queue when reply from server to client)
+            - it is default Exchange.
+            - it send message to the Queue using routing key.
+
+        Fanout Exchange:
+            - it sends a message to every Queue connected with it in same time. It uses Exchange name rather than routing key.
+            - It is used for broadcasting a message or PUB/SUB mechanism.
+
+        Topic Exchange:
+            - this Exchange used sending message to one or more Queue based on routing key or pattern.
+            - it sends message to those Queues which match with the routing pattern 
+            
+3. Queue:
+    - message come into Queue through Exchange.
+    - it store the message until any consumers receive it.
+    - there has different flags to declare a Queue in different purpose.
+
+4. Producers:
+    - who send the message to the Exchange for further mechanism
+    - it can be one or multiple Producers
+
+5. Consumers: 
+    - who receive the message from Queue and process it
+    - it can be one or multiple Consumers
+    - best to process an event at a time
+
+
+6. Pub/Sub methodology:
+    - if want to same message in multiple consumers to process that message, pub/sub mechanism should be used.
+    - from Exchange it sends same message to multiple Queues and pre defined consumers consume the message from that Queue.
+    - it don't loss memory, cause it don't copy the message in multiple Queue. It just stored the message once and used it ref id in multiple Queue.
+
+
+7. Routing:
+    - with Exchange type Topic
+    - *.name.* (route name in the middle with first letter before and after it)
+    - #.payments (route everything ends with payments)
+    - user.# (route everything starts with user)
+
+
+8. Request Reply Pattern:
+    - its worked like client, server system. client send a request and server received and process it after send response to the client
+
+    workflow:
+        - client added with two Queues. sending message to request Queue with additional property (id, Reply Queue name)
+        - server received the message from request Queue and process it.
+        - after process send response to the Queue which name sent by client earlier in the property and pass the given id also.
+        - client received that message from reponse Queue and by matching the id it can be verified which (request) reponse is it. 
+
+
+9. make competing consumers
+    - 1 Queue consume by multiple consumers, to server a certain things.
+
+
+10. Additional Options:
+    - Additional Exchange:
+        Alternate Exchange:
+            - if any message can't accept by the main Exchange for validate reason or anything we can send that message to AE which used to contain the message as logging
+        Dead Letter Exchange:
+            - it is used when a Queue can't send the message to consumers or the message can't be processed that time it send the message to DLE which can stored in logging
+
+    
+    Acknowledgement:
+        - by default Queue remove message when it consume by a consumer "auto_ack", RabbitMQ don't care whether it has processed or not.
+        - there has an Alternate to send "basic_ack" from consumers the process is success than the Queue remove the message.
+        - there has also way to send "basic_nack" from consumers that the process is failer to the Queue. if we want we can set that failer message in requeue so that another consumer can handle it.
+            or we can remove the message and send it to Dead Leatter Exchange
